@@ -1,9 +1,10 @@
 // tokens
-export const USDT_ERC20_MAINNET = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 export const WETH_TESTNET = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
 export const WETH_MAINNET = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-export const TEST_ERC20_TESTNET = "0x2D8BE6BF0baA74e0A907016679CaE9190e80dD0A"; // @QUESTION WHAT is This token address
-export const TEST_ERC20_MAINNET = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // THIS IS USDT ERC20
+export const USDT_MAINNET = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // found
+export const WBTC_MAINNET = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"; // found
+export const DAI_MAINNET = "0x6B175474E89094C44Da98b954EedeAC495271d0F"; // found
+export const TEST_ERC20_TESTNET = "0x2D8BE6BF0baA74e0A907016679CaE9190e80dD0A";
 
 // wormhole contracts mainnet
 export const SOLANA_TOKEN_BRIDGE_MAINNET =
@@ -37,5 +38,10 @@ export const ETH_NODE_URL_MAINNET =
   "wss://chaotic-hidden-shape.discover.quiknode.pro/5425bf89f1b0d6b649a3a08e6c1d422c07a875be/";
 export const ETH_NODE_URL_TESTNET =
   "wss://bold-spring-shape.ethereum-goerli.discover.quiknode.pro/552834c379cccc468688e95496b9f3565ba1954d/";
+// export const SOLANA_NODE_URL_MAINNET = "https://api.mainnet-beta.solana.com";
+// export const SOLANA_NODE_URL_MAINNET =
+//   "https://mercuria-fronten-1cd8.mainnet.rpcpool.com/";
+// export const SOLANA_NODE_URL_MAINNET =
+//   "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
 export const SOLANA_NODE_URL_MAINNET =
-  "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
+  "https://icy-fabled-emerald.solana-mainnet.discover.quiknode.pro/69b58eb106bd2c95ac3f4ec535a9e0f2b6cb3251/";

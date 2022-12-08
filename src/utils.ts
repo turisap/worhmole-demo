@@ -29,7 +29,7 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { parseUnits } from "@ethersproject/units";
+import { parseEther } from "@ethersproject/units";
 
 export const getSequence = async (
   connection: Connection,
@@ -56,8 +56,7 @@ export const getSequence = async (
     originalAsset.assetAddress // Taken from the bridge UI
   );
 
-  solanaMint = "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs";
-  console.log(solanaMint);
+  console.log("Solana mint:", solanaMint);
 
   if (!solanaMint) {
     throw new Error("No Solana mint");
@@ -74,7 +73,7 @@ export const getSequence = async (
 
   const associatedAddressInfo = await connection.getAccountInfo(recipient);
 
-  console.log("ass token info", associatedAddressInfo);
+  console.log("associated token info", associatedAddressInfo);
 
   if (!associatedAddressInfo) {
     console.log("creating associated token account");
@@ -95,7 +94,7 @@ export const getSequence = async (
     const confirmedTransaction = await connection.confirmTransaction(txid);
     console.log("Transaction  confirmation", confirmedTransaction);
   }
-  const amount = parseUnits("1", 1);
+  const amount = parseEther("0.0001");
   console.log("Amount to send", amount);
   // approve the bridge to spend tokens
   await approveEth(ETH_TOKEN_BRIDGE_MAINNET, WETH_MAINNET, ethSigner, amount);
