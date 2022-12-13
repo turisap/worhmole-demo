@@ -1,16 +1,12 @@
 import {
-  DAI_MAINNET,
   ETH_CORE_BRIDGE_MAINNET,
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
-  USDT_MAINNET,
-  WBTC_MAINNET,
   WETH_MAINNET,
   WORMHOLE_RPC_HOST_MAINNET,
-  WUSDT_MAINNET,
 } from "./constants";
 import {
   approveEth,
@@ -33,7 +29,7 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { parseUnits } from "@ethersproject/units";
+import { parseEther } from "@ethersproject/units";
 
 export const getSequence = async (
   connection: Connection,
@@ -46,7 +42,7 @@ export const getSequence = async (
   const originalAsset = await getOriginalAssetEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     provider,
-    USDT_MAINNET,
+    WETH_MAINNET,
     CHAIN_ID_ETH
   );
 
@@ -60,9 +56,7 @@ export const getSequence = async (
     originalAsset.assetAddress // Taken from the bridge UI
   );
 
-  return console.log(solanaMint);
-
-  console.log(solanaMint);
+  console.log("Solana mint:", solanaMint);
 
   if (!solanaMint) {
     throw new Error("No Solana mint");
@@ -79,7 +73,7 @@ export const getSequence = async (
 
   const associatedAddressInfo = await connection.getAccountInfo(recipient);
 
-  console.log("ass token info", associatedAddressInfo);
+  console.log("associated token info", associatedAddressInfo);
 
   if (!associatedAddressInfo) {
     console.log("creating associated token account");
@@ -100,7 +94,7 @@ export const getSequence = async (
     const confirmedTransaction = await connection.confirmTransaction(txid);
     console.log("Transaction  confirmation", confirmedTransaction);
   }
-  const amount = parseUnits("1", 1);
+  const amount = parseEther("0.0001");
   console.log("Amount to send", amount);
   // approve the bridge to spend tokens
   await approveEth(ETH_TOKEN_BRIDGE_MAINNET, WETH_MAINNET, ethSigner, amount);
@@ -133,10 +127,8 @@ export const finilizeTransfer = async (
   const { vaaBytes: signedVAA } = await getSignedVAAWithRetry(
     [WORMHOLE_RPC_HOST_MAINNET],
     CHAIN_ID_ETH,
-    "0000000000000000000000003ee18b2214aff97000d974cf647e7c347e8fa585",
-    "96102"
-    // emitterAddress,
-    // sequence
+    emitterAddress,
+    sequence
   );
 
   console.log("SIGNEDVAA");

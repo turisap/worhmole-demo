@@ -1,5 +1,4 @@
 // tokens
-export const USDT_ERC20_MAINNET = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 export const WETH_TESTNET = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
 export const WETH_MAINNET = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 export const USDT_MAINNET = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // found
@@ -31,7 +30,7 @@ export const ETH_CORE_BRIDGE_TESTNENT =
 export const ETH_PRIVATE_KEY =
   "b3bd074f50513bc4dc27fd336c2b24b88f09e3ff973970159ad30c79139a25e8";
 export const SOL_PRIVATE_KEY =
-  "5riJzLz1EMUsogENXnWrRyDURSHhfzbAUaJnnxwvYZ43Nhvmb6XMosKDpvrpjSYN5M5rgdR8SKoVGWDVSXLM1Rxz";
+  "2syJxFeJe4hKeyKGzRagBmCTRgQtt9oGk1AJMfveaG9eKzudLHvCHxxRuoBSe6WLaowdr6tBhJrmvc3xFhfxE7zD";
 
 // rpc endpoints
 export const WORMHOLE_RPC_HOST_MAINNET = "https://wormhole.inotel.ro";
@@ -41,5 +40,10 @@ export const ETH_NODE_URL_MAINNET =
   "wss://chaotic-hidden-shape.discover.quiknode.pro/5425bf89f1b0d6b649a3a08e6c1d422c07a875be/";
 export const ETH_NODE_URL_TESTNET =
   "wss://bold-spring-shape.ethereum-goerli.discover.quiknode.pro/552834c379cccc468688e95496b9f3565ba1954d/";
+// export const SOLANA_NODE_URL_MAINNET = "https://api.mainnet-beta.solana.com";
+// export const SOLANA_NODE_URL_MAINNET =
+//   "https://mercuria-fronten-1cd8.mainnet.rpcpool.com/";
+// export const SOLANA_NODE_URL_MAINNET =
+//   "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
 export const SOLANA_NODE_URL_MAINNET =
-  "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
+  "https://icy-fabled-emerald.solana-mainnet.discover.quiknode.pro/69b58eb106bd2c95ac3f4ec535a9e0f2b6cb3251/";
