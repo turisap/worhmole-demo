@@ -1,12 +1,16 @@
 import {
+  DAI_MAINNET,
   ETH_CORE_BRIDGE_MAINNET,
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
+  USDT_MAINNET,
+  WBTC_MAINNET,
   WETH_MAINNET,
   WORMHOLE_RPC_HOST_MAINNET,
+  WUSDT_MAINNET,
 } from "./constants";
 import {
   approveEth,
@@ -42,7 +46,7 @@ export const getSequence = async (
   const originalAsset = await getOriginalAssetEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     provider,
-    WETH_MAINNET,
+    USDT_MAINNET,
     CHAIN_ID_ETH
   );
 
@@ -56,7 +60,8 @@ export const getSequence = async (
     originalAsset.assetAddress // Taken from the bridge UI
   );
 
-  solanaMint = "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs";
+  return console.log(solanaMint);
+
   console.log(solanaMint);
 
   if (!solanaMint) {
