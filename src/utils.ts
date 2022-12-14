@@ -3,9 +3,9 @@ import {
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
+  ONE_INCH_MAINNET,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
-  WETH_MAINNET,
   WORMHOLE_RPC_HOST_MAINNET,
 } from "./constants";
 import {
@@ -20,6 +20,7 @@ import {
   parseSequenceFromLogEth,
   redeemOnSolana,
   transferFromEthNative,
+  transferFromEth,
   tryNativeToUint8Array,
 } from "@certusone/wormhole-sdk";
 import { postVaaWithRetry } from "@certusone/wormhole-sdk/lib/cjs/solana/sendAndConfirmPostVaa";
@@ -29,7 +30,7 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { parseEther } from "@ethersproject/units";
+import { parseUnits } from "@ethersproject/units";
 
 export const getSequence = async (
   connection: Connection,
@@ -42,18 +43,17 @@ export const getSequence = async (
   const originalAsset = await getOriginalAssetEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     provider,
-    WETH_MAINNET,
+    ONE_INCH_MAINNET,
     CHAIN_ID_ETH
   );
 
   console.log(originalAsset);
 
-  // @QUESTION should it be solana address of wrapped wormhole token (so we hardcoded this from the portal bridge)
   let solanaMint = await getForeignAssetSolana(
     connection,
     SOLANA_TOKEN_BRIDGE_MAINNET,
     CHAIN_ID_ETH,
-    originalAsset.assetAddress // Taken from the bridge UI
+    originalAsset.assetAddress
   );
 
   console.log("Solana mint:", solanaMint);
@@ -94,18 +94,29 @@ export const getSequence = async (
     const confirmedTransaction = await connection.confirmTransaction(txid);
     console.log("Transaction  confirmation", confirmedTransaction);
   }
-  const amount = parseEther("0.0001");
+  const amount = parseUnits("1.0", 18);
+  // const amount = parseEther("0.0001");
   console.log("Amount to send", amount);
   // approve the bridge to spend tokens
-  await approveEth(ETH_TOKEN_BRIDGE_MAINNET, WETH_MAINNET, ethSigner, amount);
+  await approveEth(
+    ETH_TOKEN_BRIDGE_MAINNET,
+    ONE_INCH_MAINNET,
+    ethSigner,
+    amount
+  );
   // // transfer tokens
-  const receipt = await transferFromEthNative(
+  console.log("approved");
+  // const receipt = await transferFromEthNative(
+  const receipt = await transferFromEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     ethSigner,
+    ONE_INCH_MAINNET,
     amount,
     CHAIN_ID_SOLANA,
     tryNativeToUint8Array(recipient.toString(), CHAIN_ID_SOLANA)
   );
+
+  console.log("RECEIPT", receipt);
 
   const sequence = parseSequenceFromLogEth(receipt, ETH_CORE_BRIDGE_MAINNET);
 
