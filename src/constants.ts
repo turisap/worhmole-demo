@@ -28,10 +28,8 @@ export const ETH_CORE_BRIDGE_TESTNENT =
   "0x706abc4E45D419950511e474C7B9Ed348A4a716c";
 
 // keys mainnet
-export const ETH_PRIVATE_KEY =
-  "b3bd074f50513bc4dc27fd336c2b24b88f09e3ff973970159ad30c79139a25e8";
-export const SOL_PRIVATE_KEY =
-  "2syJxFeJe4hKeyKGzRagBmCTRgQtt9oGk1AJMfveaG9eKzudLHvCHxxRuoBSe6WLaowdr6tBhJrmvc3xFhfxE7zD";
+export const ETH_PRIVATE_KEY = process.env.REACT_APP_ETHEREUM_PRIVATE_KEY as string
+export const SOL_PRIVATE_KEY =  process.env.REACT_APP_SOLANA_PRIVATE_KEY as string;
 
 // rpc endpoints
 export const WORMHOLE_RPC_HOST_MAINNET = "https://wormhole.inotel.ro";

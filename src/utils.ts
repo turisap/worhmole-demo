@@ -19,7 +19,6 @@ import {
   getSignedVAAWithRetry,
   parseSequenceFromLogEth,
   redeemOnSolana,
-  transferFromEthNative,
   transferFromEth,
   tryNativeToUint8Array,
 } from "@certusone/wormhole-sdk";
@@ -31,6 +30,7 @@ import {
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
 import { parseUnits } from "@ethersproject/units";
+
 
 export const getSequence = async (
   connection: Connection,
