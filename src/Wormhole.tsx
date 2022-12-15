@@ -4,11 +4,8 @@ import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair } from "@solana/web3.js";
 // @ts-ignore
 import bs58 from "bs58";
-import {
-  finilizeTransfer,
-  getSequence,
-  sendFromSolanaToEthereum,
-} from "./utils";
+import { finilizeTransfer, getSequence } from "./eth-to-sol";
+import { sendFromSolanaToEthereum } from "./sol-to-eth";
 
 export const Wormhole: FC = () => {
   const [sequence, setSequence] = useState("");
