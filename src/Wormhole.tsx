@@ -4,17 +4,25 @@ import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair } from "@solana/web3.js";
 // @ts-ignore
 import bs58 from "bs58";
-import { finilizeTransfer, getSequence } from "./utils";
+import {
+  finilizeTransfer,
+  getSequence,
+  sendFromSolanaToEthereum,
+} from "./utils";
 
 export const Wormhole: FC = () => {
   const [sequence, setSequence] = useState("");
   const { connection } = useConnection();
   const solKeypair = Keypair.fromSecretKey(bs58.decode(SOL_PRIVATE_KEY));
 
-  const onClick = async () => {
+  const onSendToSolana = async () => {
     const sequence = await getSequence(connection, solKeypair);
 
     setSequence(sequence);
+  };
+
+  const onSendToEthereum = () => {
+    void sendFromSolanaToEthereum(connection);
   };
 
   useEffect(() => {
@@ -26,7 +34,12 @@ export const Wormhole: FC = () => {
   return (
     <>
       <p>Wormhole</p>
-      <button onClick={onClick}>SEND</button>
+      <div style={{ display: "grid", gridGap: "10px", width: "250px" }}>
+        <button onClick={onSendToSolana} disabled={true}>
+          SEND ETH to Solana
+        </button>
+        <button onClick={onSendToEthereum}>SEND ETH to Ethereum</button>
+      </div>
     </>
   );
 };
