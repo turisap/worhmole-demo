@@ -4,6 +4,7 @@ import {
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
+  ONE_INCH_SOLANA_MAINNET,
   SOL_PRIVATE_KEY,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
@@ -21,6 +22,7 @@ import {
   transferFromSolana,
   tryNativeToHexString,
   tryNativeToUint8Array,
+  attestFromSolana,
 } from "@certusone/wormhole-sdk";
 import {
   Connection,
@@ -40,7 +42,36 @@ export const sendFromSolanaToEthereum = async (connection: Connection) => {
 
   const solKeypair = Keypair.fromSecretKey(bs58.decode(SOL_PRIVATE_KEY));
   const payerAddress = solKeypair.publicKey.toString();
-  console.log("sol signers", payerAddress);
+  console.log("sol signer", payerAddress);
+
+  // @TODO is not present in the bridge because you chose native sol
+  const attestOnSolTx = await attestFromSolana(
+    connection,
+    SOLANA_CORE_BRIDGE_MAINNET,
+    SOLANA_TOKEN_BRIDGE_MAINNET,
+    payerAddress,
+    ONE_INCH_SOLANA_MAINNET
+  );
+
+  console.log("assembled attesting tx");
+
+  attestOnSolTx.partialSign(solKeypair);
+  console.log("partially signed attesting tx");
+
+  const attestTxId = await connection.sendRawTransaction(
+    attestOnSolTx.serialize()
+  );
+  console.log("attest tx sent");
+
+  await connection.confirmTransaction(attestTxId);
+  console.log("attest tx confirmed");
+
+  const attestTxInfo = await connection.getTransaction(attestTxId);
+  if (!attestTxInfo) {
+    throw new Error("An error occurred while fetching the transaction info");
+  }
+
+  return;
 
   const fromAddress = (
     await getAssociatedTokenAddress(
