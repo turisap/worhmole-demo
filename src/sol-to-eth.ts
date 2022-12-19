@@ -3,6 +3,9 @@ import bs58 from "bs58";
 import {
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
+  getEmitterAddressSolana,
+  getSignedVAAWithRetry,
+  parseSequenceFromLogSolana,
   transferFromSolana,
 } from "@certusone/wormhole-sdk";
 import { Connection, Keypair } from "@solana/web3.js";
@@ -13,6 +16,7 @@ import {
   WETH_SOLANA_MAINNET,
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
+  WORMHOLE_RPC_HOST_MAINNET,
 } from "./constants";
 import { parseUnits } from "@ethersproject/units";
 import { ethers, utils } from "ethers";
@@ -62,6 +66,23 @@ export const sendFromSolanaToEthereum = async (connection: Connection) => {
   if (!info) {
     throw new Error("An error occurred while fetching the transaction info");
   }
+
+  const sequence = parseSequenceFromLogSolana(info);
+  console.log("sequence", sequence);
+
+  const emitterAddress = await getEmitterAddressSolana(
+    SOLANA_TOKEN_BRIDGE_MAINNET
+  );
+  console.log("emmitter address", emitterAddress);
+
+  const vaa = await getSignedVAAWithRetry(
+    [WORMHOLE_RPC_HOST_MAINNET],
+    CHAIN_ID_SOLANA,
+    emitterAddress,
+    sequence
+  );
+
+  console.log("VAA", vaa);
 
   // const provider = new ethers.providers.WebSocketProvider(ETH_NODE_URL_MAINNET);
   // const signer = new ethers.Wallet(ETH_PRIVATE_KEY, provider);
