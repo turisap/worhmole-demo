@@ -49,7 +49,7 @@ export const ETH_NODE_URL_TESTNET =
 // export const SOLANA_NODE_URL_MAINNET = "https://api.mainnet-beta.solana.com";
 // export const SOLANA_NODE_URL_MAINNET =
 //   "https://mercuria-fronten-1cd8.mainnet.rpcpool.com/";
-export const SOLANA_NODE_URL_MAINNET =
-  "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
 // export const SOLANA_NODE_URL_MAINNET =
-//   "https://icy-fabled-emerald.solana-mainnet.discover.quiknode.pro/69b58eb106bd2c95ac3f4ec535a9e0f2b6cb3251/";
+//   "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
+export const SOLANA_NODE_URL_MAINNET =
+  "https://icy-fabled-emerald.solana-mainnet.discover.quiknode.pro/69b58eb106bd2c95ac3f4ec535a9e0f2b6cb3251/";

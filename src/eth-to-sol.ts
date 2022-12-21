@@ -6,7 +6,7 @@ import {
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
-  ONE_INCH_MAINNET,
+  WETH_MAINNET,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
   WORMHOLE_RPC_HOST_MAINNET,
@@ -29,8 +29,9 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { parseUnits } from "@ethersproject/units";
+import { parseEther } from "@ethersproject/units";
 import { postVaaWithRetry } from "../../wormhole/sdk/js/lib/cjs/solana/sendAndConfirmPostVaa";
+import { transferFromEthNative } from "@certusone/wormhole-sdk";
 
 export const getSequence = async (
   connection: Connection,
@@ -43,7 +44,7 @@ export const getSequence = async (
   const originalAsset = await getOriginalAssetEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     provider,
-    ONE_INCH_MAINNET,
+    WETH_MAINNET,
     CHAIN_ID_ETH
   );
 
@@ -94,23 +95,17 @@ export const getSequence = async (
     const confirmedTransaction = await connection.confirmTransaction(txid);
     console.log("Transaction  confirmation", confirmedTransaction);
   }
-  const amount = parseUnits("1.0", 18);
-  // const amount = parseEther("0.0001");
+  const amount = parseEther("0.000001");
   console.log("Amount to send", amount);
   // approve the bridge to spend tokens
-  await approveEth(
-    ETH_TOKEN_BRIDGE_MAINNET,
-    ONE_INCH_MAINNET,
-    ethSigner,
-    amount
-  );
+  await approveEth(ETH_TOKEN_BRIDGE_MAINNET, WETH_MAINNET, ethSigner, amount);
   // // transfer tokens
   console.log("approved");
-  // const receipt = await transferFromEthNative(
-  const receipt = await transferFromEth(
+  const receipt = await transferFromEthNative(
+    // const receipt = await transferFromEth(
     ETH_TOKEN_BRIDGE_MAINNET,
     ethSigner,
-    ONE_INCH_MAINNET,
+    // WETH_MAINNET,
     amount,
     CHAIN_ID_SOLANA,
     tryNativeToUint8Array(recipient.toString(), CHAIN_ID_SOLANA)

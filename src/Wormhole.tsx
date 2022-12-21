@@ -8,25 +8,18 @@ import { finilizeTransfer, getSequence } from "./eth-to-sol";
 import { sendFromSolanaToEthereum } from "./sol-to-eth";
 
 export const Wormhole: FC = () => {
-  const [sequence, setSequence] = useState("");
   const { connection } = useConnection();
   const solKeypair = Keypair.fromSecretKey(bs58.decode(SOL_PRIVATE_KEY));
 
   const onSendToSolana = async () => {
     const sequence = await getSequence(connection, solKeypair);
 
-    setSequence(sequence);
+    void finilizeTransfer(sequence, connection, solKeypair);
   };
 
   const onSendToEthereum = () => {
     void sendFromSolanaToEthereum(connection);
   };
-
-  useEffect(() => {
-    if (sequence) {
-      void finilizeTransfer(sequence, connection, solKeypair);
-    }
-  }, [sequence]);
 
   return (
     <>
