@@ -23,18 +23,35 @@ import {
 } from "./constants";
 import { parseUnits } from "@ethersproject/units";
 import { ethers, utils } from "ethers";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const sendFromSolanaToEthereum = async (connection: Connection) => {
   const provider = new ethers.providers.WebSocketProvider(ETH_NODE_URL_MAINNET);
   const signer = new ethers.Wallet(ETH_PRIVATE_KEY, provider);
   const solKeypair = Keypair.fromSecretKey(bs58.decode(SOL_PRIVATE_KEY));
   const payerAddress = solKeypair.publicKey.toString();
-  const fromAddress = "3AXNJsQ6FPwubsQcCdQPnyHGCbScMu7SpADZfZtKnpii";
-  const amount = parseUnits("0.01", 8).toBigInt();
+  const amount = parseUnits("0.0000001", 8).toBigInt();
   const targetAddress =
     "0x000000000000000000000000fb0d21ab93d1c18d10322d64fc27c9632cde3b06";
   const originAddress =
     "0x000000000000000000000000C02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+
+  const userAccounts = await connection.getParsedTokenAccountsByOwner(
+    solKeypair.publicKey,
+    {
+      programId: TOKEN_PROGRAM_ID,
+    }
+  );
+
+  const tokenAccount = userAccounts.value.find(
+    (account) => account.account.data.parsed.info.mint === WETH_SOLANA_MAINNET
+  );
+
+  const fromAddress = tokenAccount?.pubkey.toString();
+
+  if (!fromAddress) {
+    throw new Error("Associated token account not found");
+  }
 
   const transferingRequest = transferFromSolana(
     connection,
