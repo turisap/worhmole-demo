@@ -31,8 +31,7 @@ export const sendFromSolanaToEthereum = async (connection: Connection) => {
   const solKeypair = Keypair.fromSecretKey(bs58.decode(SOL_PRIVATE_KEY));
   const payerAddress = solKeypair.publicKey.toString();
   const amount = parseUnits("0.0000001", 8).toBigInt();
-  const targetAddress =
-    "0x000000000000000000000000fb0d21ab93d1c18d10322d64fc27c9632cde3b06";
+  const targetAddress = utils.hexZeroPad(await signer.getAddress(), 32);
   const originAddress =
     "0x000000000000000000000000C02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 

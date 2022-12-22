@@ -6,9 +6,9 @@ import {
   ETH_NODE_URL_MAINNET,
   ETH_PRIVATE_KEY,
   ETH_TOKEN_BRIDGE_MAINNET,
-  WETH_MAINNET,
   SOLANA_CORE_BRIDGE_MAINNET,
   SOLANA_TOKEN_BRIDGE_MAINNET,
+  WETH_MAINNET,
   WORMHOLE_RPC_HOST_MAINNET,
 } from "./constants";
 import {
@@ -22,7 +22,6 @@ import {
   getSignedVAAWithRetry,
   parseSequenceFromLogEth,
   redeemOnSolana,
-  transferFromEth,
   tryNativeToUint8Array,
 } from "../../wormhole/sdk/js";
 import {
