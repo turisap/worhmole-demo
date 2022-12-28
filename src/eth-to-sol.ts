@@ -107,7 +107,7 @@ export const getSequence = async (
     // WETH_MAINNET,
     amount,
     CHAIN_ID_SOLANA,
-    tryNativeToUint8Array(recipient.toString(), CHAIN_ID_SOLANA)
+    tryNativeToUint8Array(recipient.toString(), CHAIN_ID_SOLANA) // recipient will be our smart-contract, as in the smaple tx
   );
 
   console.log("RECEIPT", receipt);
@@ -128,6 +128,7 @@ export const finilizeTransfer = async (
   const emitterAddress = getEmitterAddressEth(ETH_TOKEN_BRIDGE_MAINNET);
 
   console.log("emitter address", emitterAddress);
+  console.log("sequence", sequence);
 
   const { vaaBytes: signedVAA } = await getSignedVAAWithRetry(
     [WORMHOLE_RPC_HOST_MAINNET],
