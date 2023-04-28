@@ -53,3 +53,6 @@ export const ETH_NODE_URL_TESTNET =
 //   "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d";
 export const SOLANA_NODE_URL_MAINNET =
   "https://icy-fabled-emerald.solana-mainnet.discover.quiknode.pro/69b58eb106bd2c95ac3f4ec535a9e0f2b6cb3251/";
+
+export const SOLANA_NODE_URL_DEVNET =
+  "https://sly-red-reel.solana-devnet.discover.quiknode.pro/ec071aa59d6256de3fb52c5d8f21ce61c4d3c981/";

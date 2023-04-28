@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { SOL_PRIVATE_KEY } from "./constants";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair } from "@solana/web3.js";
@@ -25,7 +25,7 @@ export const Wormhole: FC = () => {
     <>
       <p>Wormhole</p>
       <div style={{ display: "grid", gridGap: "10px", width: "250px" }}>
-        <button onClick={onSendToSolana} disabled={true}>
+        <button onClick={onSendToSolana} disabled={false}>
           SEND ETH to Solana
         </button>
         <button onClick={onSendToEthereum}>SEND ETH to Ethereum</button>

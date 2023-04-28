@@ -1,15 +1,25 @@
 // @TODO tooling: CRA does not allow to import outside of src and cannot link from other repos (as well as trynspile with babel)
 import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { ethers } from "ethers";
+import { Base64 } from "js-base64";
 import {
-  ETH_CORE_BRIDGE_MAINNET,
-  ETH_NODE_URL_MAINNET,
+  ETH_CORE_BRIDGE_TESTNENT,
+  ETH_NODE_URL_TESTNET,
+  WETH_TESTNET,
+  ETH_TOKEN_BRIDGE_TESTNET,
+  SOLANA_CORE_BRIDGE_DEVNET,
+  SOLANA_TOKEN_BRIDGE_DEVNET,
+  WORMHOLE_RPC_HOST_TESTNET,
   ETH_PRIVATE_KEY,
-  ETH_TOKEN_BRIDGE_MAINNET,
-  SOLANA_CORE_BRIDGE_MAINNET,
-  SOLANA_TOKEN_BRIDGE_MAINNET,
-  WETH_MAINNET,
-  WORMHOLE_RPC_HOST_MAINNET,
+
+  // ETH_CORE_BRIDGE_MAINNET,
+  // ETH_NODE_URL_MAINNET,
+  // ETH_PRIVATE_KEY,
+  // ETH_TOKEN_BRIDGE_MAINNET,
+  // SOLANA_CORE_BRIDGE_MAINNET,
+  // SOLANA_TOKEN_BRIDGE_MAINNET,
+  // WETH_MAINNET,
+  // WORMHOLE_RPC_HOST_MAINNET,
 } from "./constants";
 import {
   approveEth,
@@ -36,22 +46,25 @@ export const getSequence = async (
   connection: Connection,
   solKeypair: Keypair
 ) => {
-  const provider = new ethers.providers.WebSocketProvider(ETH_NODE_URL_MAINNET);
+  const provider = new ethers.providers.WebSocketProvider(ETH_NODE_URL_TESTNET);
 
   const ethSigner = new ethers.Wallet(ETH_PRIVATE_KEY, provider);
 
+  console.log(ethSigner.publicKey);
+
   const originalAsset = await getOriginalAssetEth(
-    ETH_TOKEN_BRIDGE_MAINNET,
+    ETH_TOKEN_BRIDGE_TESTNET,
     provider,
-    WETH_MAINNET,
+    WETH_TESTNET,
     CHAIN_ID_ETH
   );
 
+  console.log("original asset");
   console.log(originalAsset);
 
   let solanaMint = await getForeignAssetSolana(
     connection,
-    SOLANA_TOKEN_BRIDGE_MAINNET,
+    SOLANA_TOKEN_BRIDGE_DEVNET,
     CHAIN_ID_ETH,
     originalAsset.assetAddress
   );
@@ -94,15 +107,15 @@ export const getSequence = async (
     const confirmedTransaction = await connection.confirmTransaction(txid);
     console.log("Transaction  confirmation", confirmedTransaction);
   }
-  const amount = parseEther("0.000001");
+  const amount = parseEther("0.0001");
   console.log("Amount to send", amount);
   // approve the bridge to spend tokens
-  await approveEth(ETH_TOKEN_BRIDGE_MAINNET, WETH_MAINNET, ethSigner, amount);
+  await approveEth(ETH_TOKEN_BRIDGE_TESTNET, WETH_TESTNET, ethSigner, amount);
   // // transfer tokens
   console.log("approved");
   const receipt = await transferFromEthNative(
     // const receipt = await transferFromEth(
-    ETH_TOKEN_BRIDGE_MAINNET,
+    ETH_TOKEN_BRIDGE_TESTNET,
     ethSigner,
     // WETH_MAINNET,
     amount,
@@ -112,7 +125,7 @@ export const getSequence = async (
 
   console.log("RECEIPT", receipt);
 
-  const sequence = parseSequenceFromLogEth(receipt, ETH_CORE_BRIDGE_MAINNET);
+  const sequence = parseSequenceFromLogEth(receipt, ETH_CORE_BRIDGE_TESTNENT);
 
   console.log(" sequence", sequence);
 
@@ -125,13 +138,13 @@ export const finilizeTransfer = async (
   solKeyPair: Keypair
 ) => {
   console.log("trying get VAA");
-  const emitterAddress = getEmitterAddressEth(ETH_TOKEN_BRIDGE_MAINNET);
+  const emitterAddress = getEmitterAddressEth(ETH_TOKEN_BRIDGE_TESTNET);
 
   console.log("emitter address", emitterAddress);
   console.log("sequence", sequence);
 
   const { vaaBytes: signedVAA } = await getSignedVAAWithRetry(
-    [WORMHOLE_RPC_HOST_MAINNET],
+    [WORMHOLE_RPC_HOST_TESTNET],
     CHAIN_ID_ETH,
     emitterAddress,
     sequence
@@ -142,6 +155,8 @@ export const finilizeTransfer = async (
 
   let maxFailures = 1;
 
+  console.log("VAA bs64", Base64.fromUint8Array(signedVAA));
+
   const postPromise = postVaaWithRetry(
     connection,
     async (transaction: Transaction) => {
@@ -150,7 +165,7 @@ export const finilizeTransfer = async (
       console.log("Signed  transaction");
       return transaction;
     },
-    SOLANA_CORE_BRIDGE_MAINNET,
+    SOLANA_CORE_BRIDGE_DEVNET,
     solKeyPair.publicKey.toString(),
     Buffer.from(signedVAA),
     maxFailures
@@ -165,8 +180,8 @@ export const finilizeTransfer = async (
   console.log("awaited post promise");
   const transaction = await redeemOnSolana(
     connection,
-    SOLANA_CORE_BRIDGE_MAINNET,
-    SOLANA_TOKEN_BRIDGE_MAINNET,
+    SOLANA_CORE_BRIDGE_DEVNET,
+    SOLANA_TOKEN_BRIDGE_DEVNET,
     solKeyPair.publicKey.toString(),
     signedVAA
   );
@@ -182,7 +197,7 @@ export const finilizeTransfer = async (
   console.log("confirmed");
 
   const confirmed = await getIsTransferCompletedSolana(
-    SOLANA_TOKEN_BRIDGE_MAINNET,
+    SOLANA_TOKEN_BRIDGE_DEVNET,
     signedVAA,
     connection
   );
